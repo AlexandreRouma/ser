@@ -6,6 +6,7 @@
 #include <SetupAPI.h>
 #else
 #include <termios.h>
+#include <filesystem>
 #endif
 
 namespace ser {
@@ -42,10 +43,10 @@ namespace ser {
                 printf("Last error: %d\n", GetLastError());
                 continue;
             }
-            std::string path(detailedData->DevicePath);
+            std::string path(detailedData->DevicePath); // TF is this?
 
             // Add path to the list
-            ports.push_back(std::string(detailedData->DevicePath));
+            ports.push_back(std::string(detailedData->DevicePath)); // why isn't it used here?
 
             // Free the detailed data
             free(detailedData);
@@ -54,7 +55,19 @@ namespace ser {
         // Free the device list
         SetupDiDestroyDeviceInfoList(info);
 #else
-        // TODO: Linux
+        // List all terminal devices
+        auto sysTTY = std::filesystem::path("/sys/class/tty");
+        auto ttys = std::filesystem::directory_iterator(sysTTY);
+        for (const auto& tty : ttys) {
+            // Skip if not a directory
+            if (!tty.is_directory()) { continue; }
+
+            // Skip if not linked with a device
+            if (!std::filesystem::exists(sysTTY / tty / "device")) { continue; }
+
+            // Save to list
+            ports.push_back(tty.path().filename());
+        }
 #endif
 
         return ports;

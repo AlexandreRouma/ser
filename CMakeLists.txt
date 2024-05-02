@@ -9,9 +9,12 @@ file(GLOB_RECURSE LIB "lib/*.cpp" "lib/*.c")
 add_executable(${PROJECT_NAME} ${SRC} ${LIB})
 
 # Specify that the C++ version to use for the executable is C++17
-target_compile_options(${PROJECT_NAME} PRIVATE /std:c++17)
+if (MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /std:c++17)
+    target_link_libraries(${PROJECT_NAME} PRIVATE setupapi.lib)
+else (MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE -std=c++17)
+endif (MSVC)
 
-#find_package(libusb CONFIG REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE "lib/")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE setupapi.lib)
