@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "ser.h"
+#include "ser/ser.h"
 
 int main() {
     try {
@@ -16,11 +16,8 @@ int main() {
             }
         }
 
-        // // Exit if no ports are available
-        // if (ports.empty()) { return -1; }
-
-        // // Open the first one
-        // std::shared_ptr<ser::Port> com = ser::open(ports[0], 115200);
+        // Open the first one
+        ser::Port com = ser::open("ttyACM0", 115200);//ser::open(ports[0], 115200);
 
         // // Send a message
         // com->sendstr("Hello World!");

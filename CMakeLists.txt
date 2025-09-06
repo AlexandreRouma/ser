@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.13)
-project(ser)
+project(demo)
 
 # Get all files in the source directory recursively
-file(GLOB_RECURSE SRC "src/*.cpp" "src/*.c")
-file(GLOB_RECURSE LIB "lib/*.cpp" "lib/*.c")
+file(GLOB_RECURSE SRC "demo/*.cpp" "demo/*.c")
+file(GLOB_RECURSE LIB "ser/*.cpp" "ser/*.c")
 
 # Create an executable using those source file
 add_executable(${PROJECT_NAME} ${SRC} ${LIB})
+target_include_directories(${PROJECT_NAME} PRIVATE "./")
 
 # Specify that the C++ version to use for the executable is C++17
 if (MSVC)

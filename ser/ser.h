@@ -4,6 +4,8 @@
 #include <memory>
 #ifdef _WIN32
 #include <Windows.h>
+#else
+#include <termios.h>
 #endif
 
 namespace ser {
@@ -43,6 +45,12 @@ namespace ser {
          */
         bool isOpen();
 
+        // TODO
+        void setBaudrate(uint32_t baudrate);
+        void setBits(uint8_t bits);
+        void setParity(ParityType parity);
+        void setStopBits(uint8_t stopBits);
+
         /**
          * Send data on port.
          * @param data Data to be sent.
@@ -79,6 +87,9 @@ namespace ser {
 
     private:
         OSHandle port;
+#ifndef _WIN32
+        struct termios attr;
+#endif
     };
 
     /**
@@ -95,5 +106,5 @@ namespace ser {
      * @param stopBits Number of stop bits.
      * @param parity Parity type.
     */
-    Port open(const std::string& name, int baudrate = 9600, int bits = 8, int stopBits = 1, ParityType parity = PARITY_TYPE_NONE);
+    Port open(const std::string& name, uint32_t baudrate = 9600, uint8_t bits = 8, ParityType parity = PARITY_TYPE_NONE, uint8_t stopBits = 1);
 }
